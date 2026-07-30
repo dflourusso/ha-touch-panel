@@ -1,6 +1,6 @@
 # HA Touch Panel
 
-ESPHome firmware for Guition JC8048W550 (ESP32-S3, 800×480) Home Assistant room panels.
+ESPHome firmware for Guition JC8048W550 (ESP32-S3, portrait 480×800) Home Assistant room panels.
 
 ## First-time installation
 
@@ -8,9 +8,7 @@ Connect the panel via USB-C, then use the button below to flash factory firmware
 
 If the flasher cannot connect, hold **BOOT**, tap **RESET**, then release **BOOT**, and try again.
 
-After install, keep USB connected and use **Configure Wi-Fi** in the installer dialog (Improv over serial).
-
-<script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
+<script type="module" src="https://unpkg.com/esp-web-tools@10.1.1/dist/web/install-button.js?module"></script>
 
 ### Suite (`home/suite`)
 
@@ -20,15 +18,28 @@ After install, keep USB connected and use **Configure Wi-Fi** in the installer d
   <span slot="not-allowed">HTTPS is required (or use localhost).</span>
 </esp-web-install-button>
 
-## After flashing
+## After flashing — set Wi-Fi
 
-**Preferred:** use **Configure Wi-Fi** in the browser installer while USB is still connected.
+After install, wait for the device to reboot, then reconnect in the installer dialog.
 
-**Fallback (SoftAP):**
+### 1. USB Improv (when available)
 
-1. The device starts a Wi-Fi access point (password: `touchpanel-setup`).
+If the dialog shows **Configure Wi-Fi**, use it while USB is still connected (Improv over serial).
+
+If you only see **Install** and **Logs & Console** (Improv not detected — common on this board because touch uses GPIO19/20 shared with USB-Serial-JTAG):
+
+1. Open **Logs & Console**, wait a moment, then go **Back** — Configure Wi-Fi sometimes appears after that.
+2. Otherwise use SoftAP or BLE below.
+
+### 2. SoftAP (always works)
+
+1. The device starts a Wi-Fi access point named **`TouchPanel-Setup`** (password: `touchpanel-setup`).
 2. Connect with your phone — the captive portal opens automatically (or go to http://192.168.4.1/).
 3. Enter your home Wi-Fi credentials.
+
+### 3. BLE Improv
+
+Factory firmware also exposes Improv over Bluetooth. Use a phone/browser that supports [Improv via BLE](https://www.improv-wifi.com/) to send credentials without SoftAP.
 
 Then add the device in Home Assistant via the ESPHome integration.
 

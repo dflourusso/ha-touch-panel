@@ -1,23 +1,45 @@
-# Shared fonts for LVGL panels (800x480).
+# Shared fonts for LVGL panels (portrait 480x800).
 
 font:
   - file: "gfonts://Roboto"
     id: font_roboto_14
     size: 14
     bpp: 4
+    glyphsets:
+      - GF_Latin_Core
   - file: "gfonts://Roboto"
     id: font_roboto_18
     size: 18
     bpp: 4
+    glyphsets:
+      - GF_Latin_Core
   - file: "gfonts://Roboto"
     id: font_roboto_22
     size: 22
     bpp: 4
+    glyphsets:
+      - GF_Latin_Core
   - file: "gfonts://Roboto"
     id: font_roboto_28
     size: 28
     bpp: 4
+    glyphsets:
+      - GF_Latin_Core
   - file: "gfonts://Roboto"
     id: font_roboto_36
     size: 36
     bpp: 4
+    glyphsets:
+      - GF_Latin_Core
+  - file: "gfonts://Roboto"
+    id: font_roboto_48
+    size: 48
+    bpp: 4
+    glyphsets:
+      - GF_Latin_Core
+  - file: "gfonts://Roboto"
+    id: font_roboto_56
+    size: 56
+    bpp: 4
+    glyphsets:
+      - GF_Latin_Core

@@ -1,4 +1,6 @@
 # Shared API + first-time Wi-Fi provisioning (no home Wi-Fi secrets).
+# USB Improv (serial) may fail on this board: GT911 uses GPIO19/20 (USB-Serial-JTAG).
+# SoftAP + BLE Improv are reliable fallbacks.
 
 api:
 
@@ -8,11 +10,16 @@ ota:
 
 wifi:
   ap:
+    ssid: "TouchPanel-Setup"
     password: "touchpanel-setup"
 
 captive_portal:
 
 improv_serial:
+  next_url: https://dflourusso.github.io/ha-touch-panel/
+
+esp32_improv:
+  authorizer: none
 
 binary_sensor:
   - platform: status

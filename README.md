@@ -1,6 +1,6 @@
 # HA Touch Panel
 
-ESPHome + LVGL firmware for **Guition JC8048W550** (ESP32-S3 N16R8, 800×480 capacitive touch) as Home Assistant room control panels.
+ESPHome + LVGL firmware for **Guition JC8048W550** (ESP32-S3 N16R8, portrait **480×800** capacitive touch) as Home Assistant room control panels.
 
 First-class HA integration (native API). Entity IDs are set per panel in YAML and compiled into that panel’s firmware.
 
@@ -8,7 +8,7 @@ First-class HA integration (native API). Entity IDs are set per panel in YAML an
 |---|---|
 | Board | Guition JC8048W550 |
 | MCU | ESP32-S3, 16MB flash, 8MB PSRAM |
-| Display | 800×480 RGB (`mipi_rgb`) + GT911 touch |
+| Display | 800×480 RGB (`mipi_rgb`) + GT911, UI rotated to **480×800** |
 | First panel | `sites/home/panels/suite` |
 
 ![Board front](docs/images/board-front.png)
@@ -18,7 +18,7 @@ First-class HA integration (native API). Entity IDs are set per panel in YAML an
 ```text
 hardware/guition-jc8048w550.yaml   # shared board definition
 packages/common/                     # API, Wi-Fi/Improv, fonts
-packages/ui/room-shell.yaml          # shared LVGL UI shell
+packages/ui/room-shell.yaml          # shared LVGL UI shell (PT-BR labels)
 sites/<site>/panels/<panel>/
   panel.yaml                         # entity IDs + live-state wiring
   factory.yaml                       # release / web-flash entrypoint
@@ -33,14 +33,16 @@ static/                              # GitHub Pages flash site
 
 ## Suite controls
 
+UI strings are PT-BR; entity IDs and code stay English.
+
 | UI | Entity | Live state |
 |----|--------|------------|
-| L1–L4 toggles | `light.suite_switch_suite_l1` … `_l4` | on/off |
-| RGB | `light.rgb_suite` | on/off, brightness, color presets |
-| Cabeceira dimmer | `light.led_cabeceira_suite` | on/off, brightness |
-| Persiana | `cover.persiana_suite` | position / movement |
-| Climate | `climate.suite_2` | temp, setpoint, HVAC mode, fan |
-| Master Off | *(local action)* | turns off L1–L4, RGB, cabeceira |
+| L1–L4 | `light.suite_switch_suite_l1` … `_l4` | on/off |
+| RGB Suíte | `light.rgb_suite` | on/off, brightness, color presets |
+| Cabeceira | `light.led_cabeceira_suite` | on/off, brightness |
+| Persiana suíte | `cover.persiana_suite` | open / stop / close (RF — no position %) |
+| Clima | `climate.suite_2` | temp, setpoint, HVAC `off`/`cool`/`heat`, fan `focus`/`auto`/`high` |
+| Desligar tudo | *(local action)* | turns off L1–L4, RGB, cabeceira |
 
 Edit entity IDs in [`sites/home/panels/suite/panel.yaml`](sites/home/panels/suite/panel.yaml) substitutions, then rebuild/OTA that panel.
 
@@ -48,8 +50,13 @@ Edit entity IDs in [`sites/home/panels/suite/panel.yaml`](sites/home/panels/suit
 
 1. Open the [GitHub Pages installer](https://dflourusso.github.io/ha-touch-panel/) (after the first release + Pages publish).
 2. USB-C → **Install Suite panel** (Chrome/Edge).
-3. Configure Wi-Fi via Improv (or SoftAP password `touchpanel-setup`).
+3. Set Wi-Fi:
+   - **Configure Wi-Fi** in the installer if Improv Serial is detected, or
+   - SoftAP **`TouchPanel-Setup`** / password `touchpanel-setup`, or
+   - BLE Improv ([improv-wifi.com](https://www.improv-wifi.com/))
 4. Adopt in Home Assistant → enable **Allow the device to perform Home Assistant actions**.
+
+**Note:** GT911 touch uses GPIO19/20, which conflict with ESP32-S3 USB-Serial-JTAG. USB Improv after boot often fails on this board; SoftAP and BLE are the reliable paths. Opening **Logs & Console** then **Back** in the installer sometimes re-triggers Improv detection.
 
 You can also download `*.factory.bin` from [Releases](https://github.com/dflourusso/ha-touch-panel/releases).
 
@@ -64,7 +71,7 @@ docker run --rm -v "$PWD":/config -w /config ghcr.io/esphome/esphome:stable \
   run sites/home/panels/suite/dev.yaml
 ```
 
-Factory (no home Wi-Fi secrets; SoftAP + Improv):
+Factory (no home Wi-Fi secrets; SoftAP + Improv serial/BLE):
 
 ```bash
 docker run --rm -v "$PWD":/config -w /config ghcr.io/esphome/esphome:stable \
@@ -95,5 +102,6 @@ PRs/pushes that touch YAML compile every discovered `sites/**/factory.yaml` and 
 
 ## Notes
 
-- GPIO19/20 are used for the GT911 I²C bus on this board (ESPHome may warn about USB-Serial-JTAG).
+- GPIO19/20 are used for the GT911 I²C bus on this board (conflicts with USB-Serial-JTAG; logger defaults to UART0).
 - Changing entity bindings requires a recompile/OTA of that panel (not runtime rebinding).
+- If the UI is upside-down after flash, change `rotation` in `packages/ui/room-shell.yaml` from `90°` to `270°`.

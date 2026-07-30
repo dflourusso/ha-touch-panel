@@ -1,9 +1,10 @@
 # Guition JC8048W550 — ESP32-S3 N16R8, 800x480 IPS, GT911
 # Board-only package (no device name / Wi-Fi / UI).
+# Logical UI is portrait 480x800 via display rotation (panel timing stays 800x480).
 
 substitutions:
-  screen_width: "800"
-  screen_height: "480"
+  screen_width: "480"
+  screen_height: "800"
 
 esphome:
   min_version: 2026.6.0
@@ -25,7 +26,10 @@ psram:
   mode: octal
   speed: 80MHz
 
+# UART0 avoids USB-Serial-JTAG on GPIO19/20 (used by GT911). Needed for Improv Serial when USB-C is a UART bridge.
 logger:
+  hardware_uart: UART0
+  baud_rate: 115200
 
 preferences:
   flash_write_interval: 5min
