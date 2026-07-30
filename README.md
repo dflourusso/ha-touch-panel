@@ -11,8 +11,6 @@ First-class HA integration (native API). Entity IDs are set per panel in YAML an
 | Display | 800×480 RGB (`mipi_rgb`) + GT911 touch |
 | First panel | `sites/home/panels/suite` |
 
-![Board back](docs/images/board-back.png)
-
 ![Board front](docs/images/board-front.png)
 
 ## Project layout
