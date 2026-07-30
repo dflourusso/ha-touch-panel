@@ -83,11 +83,11 @@ docker run --rm -v "$PWD":/config -w /config ghcr.io/esphome/esphome:stable \
 
 1. GitHub → **Actions** → **Release Firmware**
 2. Inputs:
-   - `version` — semver tag, e.g. `1.0.0`
-   - `build_number` — integer build counter (becomes `1.0.0+42` in the build metadata)
+   - `version` — semver, e.g. `1.0.0`
+   - `build_number` — integer build counter (release tag + artifact folder become `1.0.0+42`)
    - `device` — `home/suite` or `all`
    - optional `release_notes`
-3. Workflow builds factory firmware, uploads a GitHub Release, then **Publish Pages** refreshes the web installer from the latest release assets.
+3. Workflow builds factory firmware, uploads a GitHub Release tagged `version+build_number`, then **Publish Pages** refreshes the web installer from the latest release assets.
 
 ## CI
 

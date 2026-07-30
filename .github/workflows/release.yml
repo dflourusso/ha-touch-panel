@@ -94,7 +94,7 @@ jobs:
       esphome-version: 2026.6.2
       combined-name: ${{ needs.resolve.outputs.combined_name }}
       release-summary: ${{ github.event.inputs.release_notes }}
-      release-url: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ github.event.inputs.version }}
+      release-url: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ needs.resolve.outputs.release_version }}
       release-version: ${{ needs.resolve.outputs.release_version }}
 
   upload-to-release:
@@ -104,4 +104,5 @@ jobs:
       - resolve
       - build-firmware
     with:
-      version: ${{ github.event.inputs.version }}
+      # Must match build artifact folder (version+build_number), not the bare semver input
+      version: ${{ needs.resolve.outputs.release_version }}
