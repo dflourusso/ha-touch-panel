@@ -1,0 +1,259 @@
+# Suite touch panel — Guition JC8048W550
+# Entity bindings + live state for Home Assistant.
+
+substitutions:
+  device_name: home-suite
+  friendly_name: Suite Panel
+  panel_title: "Suite"
+
+  light_l1: light.suite_switch_suite_l1
+  light_l2: light.suite_switch_suite_l2
+  light_l3: light.suite_switch_suite_l3
+  light_l4: light.suite_switch_suite_l4
+  light_rgb: light.rgb_suite
+  light_dimmer: light.led_cabeceira_suite
+  cover_entity: cover.persiana_suite
+  climate_entity: climate.suite_2
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+  name_add_mac_suffix: false
+  min_version: 2026.6.0
+  on_boot:
+    priority: -100
+    then:
+      - delay: 2s
+      - light.turn_on:
+          id: display_backlight
+          brightness: 80%
+
+packages:
+  hardware: !include ../../../../hardware/guition-jc8048w550.yaml
+  api_wifi: !include ../../../../packages/common/api-wifi.yaml
+  fonts: !include ../../../../packages/common/fonts-theme.yaml
+  ui: !include ../../../../packages/ui/room-shell.yaml
+
+# ---- Live state: lights (on/off) ----
+binary_sensor:
+  - platform: homeassistant
+    id: ha_l1
+    entity_id: ${light_l1}
+    trigger_on_initial_state: true
+    on_state:
+      - lvgl.widget.update:
+          id: btn_l1
+          state:
+            checked: !lambda return x;
+
+  - platform: homeassistant
+    id: ha_l2
+    entity_id: ${light_l2}
+    trigger_on_initial_state: true
+    on_state:
+      - lvgl.widget.update:
+          id: btn_l2
+          state:
+            checked: !lambda return x;
+
+  - platform: homeassistant
+    id: ha_l3
+    entity_id: ${light_l3}
+    trigger_on_initial_state: true
+    on_state:
+      - lvgl.widget.update:
+          id: btn_l3
+          state:
+            checked: !lambda return x;
+
+  - platform: homeassistant
+    id: ha_l4
+    entity_id: ${light_l4}
+    trigger_on_initial_state: true
+    on_state:
+      - lvgl.widget.update:
+          id: btn_l4
+          state:
+            checked: !lambda return x;
+
+  - platform: homeassistant
+    id: ha_rgb_on
+    entity_id: ${light_rgb}
+    trigger_on_initial_state: true
+    on_state:
+      - lvgl.widget.update:
+          id: btn_rgb_power
+          state:
+            checked: !lambda return x;
+
+  - platform: homeassistant
+    id: ha_dimmer_on
+    entity_id: ${light_dimmer}
+    trigger_on_initial_state: true
+    on_state:
+      - lvgl.widget.update:
+          id: btn_dimmer_power
+          state:
+            checked: !lambda return x;
+
+# ---- Live state: brightness / climate numbers / cover position ----
+sensor:
+  - platform: homeassistant
+    id: ha_rgb_brightness
+    entity_id: ${light_rgb}
+    attribute: brightness
+    on_value:
+      - lvgl.slider.update:
+          id: slider_rgb_brightness
+          value: !lambda return x;
+
+  - platform: homeassistant
+    id: ha_dimmer_brightness
+    entity_id: ${light_dimmer}
+    attribute: brightness
+    on_value:
+      - lvgl.slider.update:
+          id: slider_dimmer_brightness
+          value: !lambda return x;
+
+  - platform: homeassistant
+    id: ha_climate_current
+    entity_id: ${climate_entity}
+    attribute: current_temperature
+    on_value:
+      - lvgl.label.update:
+          id: lbl_climate_current
+          text:
+            format: "%.1f C"
+            args: [x]
+
+  - platform: homeassistant
+    id: ha_climate_setpoint
+    entity_id: ${climate_entity}
+    attribute: temperature
+    on_value:
+      - lvgl.spinbox.update:
+          id: spinbox_climate_temp
+          value: !lambda return x;
+
+  - platform: homeassistant
+    id: ha_cover_pos
+    entity_id: ${cover_entity}
+    attribute: current_position
+    on_value:
+      - lvgl.label.update:
+          id: lbl_cover_pos
+          text:
+            format: "%.0f%%"
+            args: [x]
+      - if:
+          condition:
+            lambda: return x >= 99.5;
+          then:
+            - lvgl.widget.update:
+                id: lbl_cover_open
+                text_opa: 60%
+          else:
+            - lvgl.widget.update:
+                id: lbl_cover_open
+                text_opa: 100%
+      - if:
+          condition:
+            lambda: return x <= 0.5;
+          then:
+            - lvgl.widget.update:
+                id: lbl_cover_close
+                text_opa: 60%
+          else:
+            - lvgl.widget.update:
+                id: lbl_cover_close
+                text_opa: 100%
+
+# ---- Live state: climate mode / fan / cover movement ----
+text_sensor:
+  - platform: homeassistant
+    id: ha_hvac_mode
+    entity_id: ${climate_entity}
+    on_value:
+      - lvgl.label.update:
+          id: lbl_hvac_mode
+          text:
+            format: "Mode: %s"
+            args: [x.c_str()]
+
+  - platform: homeassistant
+    id: ha_fan_mode
+    entity_id: ${climate_entity}
+    attribute: fan_mode
+    on_value:
+      - lvgl.label.update:
+          id: lbl_fan_mode
+          text:
+            format: "Fan: %s"
+            args: [x.c_str()]
+
+  - platform: homeassistant
+    id: ha_cover_state
+    entity_id: ${cover_entity}
+    on_value:
+      - if:
+          condition:
+            lambda: |-
+              return x == "opening" || x == "closing";
+          then:
+            - lvgl.label.update:
+                id: lbl_cover_stop
+                text: "Stop"
+          else:
+            - lvgl.label.update:
+                id: lbl_cover_stop
+                text:
+                  format: "%.0f%%"
+                  args: ["id(ha_cover_pos).state"]
+
+script:
+  - id: cycle_hvac_mode
+    then:
+      - lambda: |-
+          static const char *modes[] = {"off", "cool", "heat", "dry", "fan_only", "auto"};
+          const int n = 6;
+          std::string cur = id(ha_hvac_mode).has_state() ? id(ha_hvac_mode).state : "off";
+          int idx = 0;
+          for (int i = 0; i < n; i++) {
+            if (cur == modes[i]) { idx = i; break; }
+          }
+          idx = (idx + 1) % n;
+          id(pending_hvac_mode) = modes[idx];
+      - homeassistant.action:
+          action: climate.set_hvac_mode
+          data:
+            entity_id: ${climate_entity}
+            hvac_mode: !lambda return id(pending_hvac_mode);
+
+  - id: cycle_fan_mode
+    then:
+      - lambda: |-
+          static const char *modes[] = {"auto", "low", "medium", "high"};
+          const int n = 4;
+          std::string cur = id(ha_fan_mode).has_state() ? id(ha_fan_mode).state : "auto";
+          int idx = 0;
+          for (int i = 0; i < n; i++) {
+            if (cur == modes[i]) { idx = i; break; }
+          }
+          idx = (idx + 1) % n;
+          id(pending_fan_mode) = modes[idx];
+      - homeassistant.action:
+          action: climate.set_fan_mode
+          data:
+            entity_id: ${climate_entity}
+            fan_mode: !lambda return id(pending_fan_mode);
+
+globals:
+  - id: pending_hvac_mode
+    type: std::string
+    restore_value: false
+    initial_value: '"off"'
+  - id: pending_fan_mode
+    type: std::string
+    restore_value: false
+    initial_value: '"auto"'

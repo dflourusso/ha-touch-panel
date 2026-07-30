@@ -1,0 +1,87 @@
+# Guition JC8048W550 — ESP32-S3 N16R8, 800x480 IPS, GT911
+# Board-only package (no device name / Wi-Fi / UI).
+
+substitutions:
+  screen_width: "800"
+  screen_height: "480"
+
+esphome:
+  min_version: 2026.6.0
+  build_flags:
+    - "-DBOARD_HAS_PSRAM"
+
+esp32:
+  board: esp32-s3-devkitc-1
+  variant: esp32s3
+  flash_size: 16MB
+  framework:
+    type: esp-idf
+    sdkconfig_options:
+      CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_240: y
+    advanced:
+      execute_from_psram: true
+
+psram:
+  mode: octal
+  speed: 80MHz
+
+logger:
+
+preferences:
+  flash_write_interval: 5min
+
+output:
+  - platform: ledc
+    pin: GPIO02
+    id: gpio_backlight_pwm
+    frequency: 1220Hz
+
+light:
+  - platform: monochromatic
+    id: display_backlight
+    name: Display Backlight
+    output: gpio_backlight_pwm
+    restore_mode: ALWAYS_ON
+    default_transition_length: 0s
+
+i2c:
+  - id: i2c_touch
+    sda: GPIO19
+    scl: GPIO20
+    scan: true
+
+touchscreen:
+  - platform: gt911
+    id: main_touchscreen
+    i2c_id: i2c_touch
+    address: 0x5D
+    display: main_display
+    update_interval: 16ms
+
+display:
+  - platform: mipi_rgb
+    id: main_display
+    model: RPI
+    color_order: RGB
+    invert_colors: true
+    update_interval: never
+    auto_clear_enabled: false
+    dimensions:
+      width: 800
+      height: 480
+    de_pin: GPIO40
+    hsync_pin: GPIO39
+    vsync_pin: GPIO41
+    pclk_pin: GPIO42
+    pclk_frequency: 16MHz
+    pclk_inverted: true
+    hsync_pulse_width: 4
+    hsync_back_porch: 8
+    hsync_front_porch: 8
+    vsync_pulse_width: 4
+    vsync_back_porch: 8
+    vsync_front_porch: 8
+    data_pins:
+      red: [45, 48, 47, 21, 14]
+      green: [5, 6, 7, 15, 16, 4]
+      blue: [8, 3, 46, 9, 1]

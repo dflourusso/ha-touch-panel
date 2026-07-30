@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  pull_request:
+    paths:
+      - "hardware/**"
+      - "packages/**"
+      - "sites/**"
+      - "secrets.template.yaml"
+      - ".github/workflows/ci.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "hardware/**"
+      - "packages/**"
+      - "sites/**"
+      - "secrets.template.yaml"
+      - ".github/workflows/ci.yml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  discover:
+    name: Discover panels
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set.outputs.matrix }}
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: Build matrix from panel YAMLs
+        id: set
+        run: |
+          set -euo pipefail
+          files=()
+          while IFS= read -r f; do
+            files+=("\"$f\"")
+          done < <(find sites -type f \( -name 'factory.yaml' -o -name 'dev.yaml' \) | sort)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "No panel factory/dev YAML files found" >&2
+            exit 1
+          fi
+          joined=$(IFS=,; echo "${files[*]}")
+          echo "matrix={\"file\":[${joined}]}" >> "$GITHUB_OUTPUT"
+          echo "Discovered: ${joined}"
+
+  ci:
+    name: Building ${{ matrix.file }}
+    needs: discover
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.discover.outputs.matrix) }}
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: Create secrets for dev build
+        if: endsWith(matrix.file, '/dev.yaml')
+        run: |
+          panel_dir=$(dirname "${{ matrix.file }}")
+          cp secrets.template.yaml "${panel_dir}/secrets.yaml"
+
+      - name: ESPHome compile ${{ matrix.file }}
+        uses: esphome/build-action@4ef4722a2935eac47b7e227fe0e1f8e0f8afcc42 # v7.3.0
+        with:
+          yaml-file: ${{ matrix.file }}
+          version: stable

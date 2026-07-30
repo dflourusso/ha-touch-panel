@@ -1,0 +1,36 @@
+# Shared API + first-time Wi-Fi provisioning (no home Wi-Fi secrets).
+
+api:
+
+ota:
+  - platform: esphome
+    id: ota_esphome
+
+wifi:
+  ap:
+    password: "touchpanel-setup"
+
+captive_portal:
+
+improv_serial:
+
+binary_sensor:
+  - platform: status
+    name: Status
+    id: ha_api_status
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: IP Address
+      id: wifi_ip
+    ssid:
+      name: SSID
+      id: wifi_ssid_info
+
+sensor:
+  - platform: wifi_signal
+    name: WiFi Signal
+    id: wifi_signal_db
+    update_interval: 60s
+    entity_category: diagnostic

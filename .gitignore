@@ -1,0 +1,9 @@
+.esphome/
+**/.esphome/
+.pio/
+secrets.yaml
+**/secrets.yaml
+.vscode/
+*.pyc
+__pycache__/
+container-config/
