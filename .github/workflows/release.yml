@@ -58,7 +58,10 @@ jobs:
             done < <(find sites -type f -name 'factory.yaml' | sort)
             combined_name="ha-touch-panel"
           else
-            factory="sites/${device}/factory.yaml"
+            # Device id is <site>/<panel> → sites/<site>/panels/<panel>/factory.yaml
+            site="${device%%/*}"
+            panel="${device#*/}"
+            factory="sites/${site}/panels/${panel}/factory.yaml"
             if [ ! -f "$factory" ]; then
               echo "Missing factory config: $factory" >&2
               exit 1
