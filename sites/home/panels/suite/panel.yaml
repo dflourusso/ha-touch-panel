@@ -225,9 +225,9 @@ text_sensor:
               int r = 0, g = 0, b = 0;
               if (sscanf(x.c_str(), "(%d, %d, %d)", &r, &g, &b) == 3 ||
                   sscanf(x.c_str(), "[%d, %d, %d]", &r, &g, &b) == 3) {
-                return (r << 16) | (g << 8) | b;
+                return lv_color_make(r, g, b);
               }
-              return 0x3B82F6;
+              return lv_color_hex(0x3B82F6);
 
   - platform: homeassistant
     id: ha_hvac_mode
