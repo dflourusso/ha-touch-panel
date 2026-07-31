@@ -63,6 +63,15 @@ touchscreen:
     address: 0x5D
     display: main_display
     update_interval: 16ms
+    # Wake from sleep-mode lvgl.pause without activating the widget under the finger.
+    on_release:
+      - if:
+          condition: lvgl.is_paused
+          then:
+            - lvgl.resume:
+            - light.turn_on:
+                id: display_backlight
+                brightness: 100%
 
 display:
   - platform: mipi_rgb

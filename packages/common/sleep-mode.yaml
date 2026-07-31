@@ -1,0 +1,40 @@
+# Toggleable sleep mode: when ON, idle timeout blanks the backlight and pauses LVGL.
+# First touch wakes (resume + backlight) without activating widgets underneath.
+# Schedule on/off from Home Assistant automations — not hard-coded here.
+#
+# Expects substitution (optional, default below):
+#   sleep_idle_timeout — e.g. "60s"
+
+substitutions:
+  sleep_idle_timeout: "60s"
+
+switch:
+  - platform: template
+    name: Sleep Mode
+    id: sleep_mode
+    icon: mdi:sleep
+    entity_category: config
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    turn_on_action:
+      - logger.log: "Sleep mode enabled"
+    turn_off_action:
+      - logger.log: "Sleep mode disabled"
+      - light.turn_on:
+          id: display_backlight
+          brightness: 100%
+      - if:
+          condition: lvgl.is_paused
+          then:
+            - lvgl.resume:
+
+lvgl:
+  on_idle:
+    - timeout: ${sleep_idle_timeout}
+      then:
+        - if:
+            condition:
+              switch.is_on: sleep_mode
+            then:
+              - light.turn_off: display_backlight
+              - lvgl.pause:

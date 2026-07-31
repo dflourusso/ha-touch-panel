@@ -15,6 +15,9 @@ substitutions:
   cover_entity: cover.persiana_suite
   climate_entity: climate.suite_2
 
+  # Idle blank timeout while Sleep Mode switch is ON (see packages/common/sleep-mode.yaml).
+  sleep_idle_timeout: "60s"
+
 esphome:
   name: ${device_name}
   friendly_name: ${friendly_name}
@@ -36,6 +39,7 @@ packages:
   fonts: !include ../../../../packages/common/fonts-theme.yaml
   branding: !include ../../../../packages/ui/branding.yaml
   ui: !include ../../../../packages/ui/room-shell.yaml
+  sleep_mode: !include ../../../../packages/common/sleep-mode.yaml
 
 globals:
   - id: climate_setpoint

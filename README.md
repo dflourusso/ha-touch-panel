@@ -17,7 +17,7 @@ First-class HA integration (native API). Entity IDs are set per panel in YAML an
 
 ```text
 hardware/guition-jc8048w550.yaml   # shared board definition
-packages/common/                     # API, Wi-Fi/Improv, fonts
+packages/common/                     # API, Wi-Fi/Improv, fonts, sleep mode
 packages/ui/room-shell.yaml          # shared LVGL UI shell (PT-BR labels)
 sites/<site>/panels/<panel>/
   panel.yaml                         # entity IDs + live-state wiring
@@ -43,8 +43,44 @@ UI strings are PT-BR; entity IDs and code stay English.
 | Persiana suíte | `cover.persiana_suite` | open / stop / close (RF — no position %) |
 | Clima | `climate.suite_2` | temp, setpoint, HVAC `off`/`cool`/`heat`, fan `focus`/`auto`/`high` |
 | Desligar tudo | *(local action)* | turns off L1–L4, RGB, cabeceira |
+| Sleep Mode | `switch.home_suite_sleep_mode` | when ON: blank after idle + pause LVGL; touch wakes |
 
 Edit entity IDs in [`sites/home/panels/suite/panel.yaml`](sites/home/panels/suite/panel.yaml) substitutions, then rebuild/OTA that panel.
+
+### Sleep mode (night / idle blank)
+
+Exposed as a config switch on the device (e.g. **Sleep Mode**). Schedule it from Home Assistant — do not hard-code times in firmware.
+
+| Switch | Behavior |
+|--------|----------|
+| OFF | Backlight always on |
+| ON | After `sleep_idle_timeout` (default **60s**) without touch → backlight off + `lvgl.pause`. First touch resumes LVGL and turns the backlight on **without** activating the widget under the finger. Idle blanks again while the switch stays ON. |
+
+Example HA automations:
+
+```yaml
+# Turn sleep mode on at night
+alias: Suite panel sleep mode night
+trigger:
+  - platform: time
+    at: "22:00:00"
+action:
+  - action: switch.turn_on
+    target:
+      entity_id: switch.home_suite_sleep_mode  # confirm entity id in HA
+
+# Turn sleep mode off in the morning
+alias: Suite panel sleep mode morning
+trigger:
+  - platform: time
+    at: "07:00:00"
+action:
+  - action: switch.turn_off
+    target:
+      entity_id: switch.home_suite_sleep_mode
+```
+
+Override idle timeout per panel with substitution `sleep_idle_timeout` in `panel.yaml` (e.g. `"90s"`).
 
 ## Flash (end users)
 
