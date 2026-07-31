@@ -70,6 +70,6 @@ font:
           - "\U000F0594"  # weather-night
           - "\U000F171A"  # fan-auto
           - "\U000F1472"  # fan-speed-3
-          - "\U000F1A0F"  # blinds-open
+          - "\U000F005D"  # arrow-up-bold
           - "\U000F04DB"  # stop
-          - "\U000F0A31"  # blinds
+          - "\U000F0045"  # arrow-down-bold
