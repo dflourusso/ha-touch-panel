@@ -4,8 +4,8 @@ packages:
 esphome:
   project:
     name: dflourusso.ha-touch-panel
-    # Must stay "dev" — release.yml sed-replaces this with version+build_number.
-    version: "dev"
+    # Must stay unquoted `dev` — ESPHome release workflow sed-replaces `version: dev`.
+    version: dev
 
 http_request:
 

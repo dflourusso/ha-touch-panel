@@ -96,7 +96,7 @@ docker run --rm -v "$PWD":/config -w /config ghcr.io/esphome/esphome:stable \
    - optional `release_notes`
 3. Workflow builds factory firmware, uploads a GitHub Release tagged `version+build_number`, then **Publish Pages** refreshes the web installer from the latest release assets.
 
-`factory.yaml` must keep `project.version: "dev"` — the ESPHome build workflow sed-replaces that string with `version+build_number`. A hardcoded semver (e.g. `1.0.0`) will show on the install page even when the GitHub release tag is newer.
+`factory.yaml` must keep unquoted `project.version: dev` — the ESPHome build workflow sed-replaces the literal `version: dev`. Quoted `"dev"` or a hardcoded semver will leave the install page stuck on the wrong version.
 
 ## CI
 
