@@ -35,10 +35,10 @@ packages:
   ui: !include ../../../../packages/ui/room-shell.yaml
 
 globals:
-  - id: climate_setpoint_x10
+  - id: climate_setpoint
     type: int
     restore_value: false
-    initial_value: "240"
+    initial_value: "24"
 
 # ---- Live state: lights (on/off) ----
 binary_sensor:
@@ -91,6 +91,13 @@ binary_sensor:
           id: btn_rgb_power
           state:
             checked: !lambda return x;
+      - if:
+          condition:
+            lambda: return !x;
+          then:
+            - lvgl.label.update:
+                id: lbl_rgb_pct
+                text: "--%"
 
   - platform: homeassistant
     id: ha_dimmer_on
@@ -101,6 +108,13 @@ binary_sensor:
           id: btn_dimmer_power
           state:
             checked: !lambda return x;
+      - if:
+          condition:
+            lambda: return !x;
+          then:
+            - lvgl.label.update:
+                id: lbl_dimmer_pct
+                text: "--%"
 
 # ---- Live state: brightness / climate numbers ----
 sensor:
@@ -109,28 +123,44 @@ sensor:
     entity_id: ${light_rgb}
     attribute: brightness
     on_value:
-      - lvgl.slider.update:
-          id: slider_rgb_brightness
-          value: !lambda return x;
-      - lvgl.label.update:
-          id: lbl_rgb_pct
-          text:
-            format: "%.0f%%"
-            args: ["x * 100.0f / 255.0f"]
+      - if:
+          condition:
+            lambda: return !isnan(x);
+          then:
+            - lvgl.slider.update:
+                id: slider_rgb_brightness
+                value: !lambda return x;
+            - lvgl.label.update:
+                id: lbl_rgb_pct
+                text:
+                  format: "%.0f%%"
+                  args: ["x * 100.0f / 255.0f"]
+          else:
+            - lvgl.label.update:
+                id: lbl_rgb_pct
+                text: "--%"
 
   - platform: homeassistant
     id: ha_dimmer_brightness
     entity_id: ${light_dimmer}
     attribute: brightness
     on_value:
-      - lvgl.slider.update:
-          id: slider_dimmer_brightness
-          value: !lambda return x;
-      - lvgl.label.update:
-          id: lbl_dimmer_pct
-          text:
-            format: "%.0f%%"
-            args: ["x * 100.0f / 255.0f"]
+      - if:
+          condition:
+            lambda: return !isnan(x);
+          then:
+            - lvgl.slider.update:
+                id: slider_dimmer_brightness
+                value: !lambda return x;
+            - lvgl.label.update:
+                id: lbl_dimmer_pct
+                text:
+                  format: "%.0f%%"
+                  args: ["x * 100.0f / 255.0f"]
+          else:
+            - lvgl.label.update:
+                id: lbl_dimmer_pct
+                text: "--%"
 
   - platform: homeassistant
     id: ha_climate_current
@@ -149,15 +179,15 @@ sensor:
     attribute: temperature
     on_value:
       - lambda: |-
-          id(climate_setpoint_x10) = (int) roundf(x * 10.0f);
+          id(climate_setpoint) = (int) roundf(x);
       - lvgl.arc.update:
           id: arc_climate_temp
-          value: !lambda return id(climate_setpoint_x10);
+          value: !lambda return id(climate_setpoint);
       - lvgl.label.update:
           id: lbl_climate_setpoint
           text:
-            format: "%.1f°C"
-            args: [x]
+            format: "%.0f°C"
+            args: ["(float) id(climate_setpoint)"]
 
 # ---- Live state: climate mode / fan ----
 text_sensor:
