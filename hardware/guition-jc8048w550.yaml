@@ -21,6 +21,8 @@ esp32:
       CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_240: y
     advanced:
       execute_from_psram: true
+      # Deep LVGL widget trees overflow the default 8KB loopTask stack at first layout.
+      loop_task_stack_size: 32768
 
 psram:
   mode: octal
