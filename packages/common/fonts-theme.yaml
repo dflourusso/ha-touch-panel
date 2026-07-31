@@ -43,3 +43,14 @@ font:
     bpp: 4
     glyphsets:
       - GF_Latin_Core
+  # Latin + mdi-lightbulb for named light buttonmatrix labels
+  - file: "gfonts://Roboto"
+    id: font_lights_btn
+    size: 20
+    bpp: 4
+    glyphsets:
+      - GF_Latin_Core
+    extras:
+      - file: "https://github.com/Templarian/MaterialDesign-Webfont/raw/v7.4.47/fonts/materialdesignicons-webfont.ttf"
+        glyphs:
+          - "\U000F0335"

@@ -50,9 +50,9 @@ binary_sensor:
     entity_id: ${light_l1}
     trigger_on_initial_state: true
     on_state:
-      - lvgl.widget.update:
+      - lvgl.matrix.button.update:
           id: btn_l1
-          state:
+          control:
             checked: !lambda return x;
 
   - platform: homeassistant
@@ -60,9 +60,9 @@ binary_sensor:
     entity_id: ${light_l2}
     trigger_on_initial_state: true
     on_state:
-      - lvgl.widget.update:
+      - lvgl.matrix.button.update:
           id: btn_l2
-          state:
+          control:
             checked: !lambda return x;
 
   - platform: homeassistant
@@ -70,9 +70,9 @@ binary_sensor:
     entity_id: ${light_l3}
     trigger_on_initial_state: true
     on_state:
-      - lvgl.widget.update:
+      - lvgl.matrix.button.update:
           id: btn_l3
-          state:
+          control:
             checked: !lambda return x;
 
   - platform: homeassistant
@@ -80,9 +80,9 @@ binary_sensor:
     entity_id: ${light_l4}
     trigger_on_initial_state: true
     on_state:
-      - lvgl.widget.update:
+      - lvgl.matrix.button.update:
           id: btn_l4
-          state:
+          control:
             checked: !lambda return x;
 
   - platform: homeassistant
@@ -91,7 +91,7 @@ binary_sensor:
     trigger_on_initial_state: true
     on_state:
       - lvgl.widget.update:
-          id: btn_rgb_power
+          id: sw_rgb_power
           state:
             checked: !lambda return x;
       - if:
@@ -108,7 +108,7 @@ binary_sensor:
     trigger_on_initial_state: true
     on_state:
       - lvgl.widget.update:
-          id: btn_dimmer_power
+          id: sw_dimmer_power
           state:
             checked: !lambda return x;
       - if:

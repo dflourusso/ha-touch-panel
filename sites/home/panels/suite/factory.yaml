@@ -17,3 +17,5 @@ update:
     name: Firmware
     device_class: firmware
     source: https://dflourusso.github.io/ha-touch-panel/firmware/home-suite.manifest.json
+    # Short while iterating; raise (e.g. 6h) once the project is stable.
+    update_interval: 2min

@@ -37,7 +37,7 @@ UI strings are PT-BR; entity IDs and code stay English.
 
 | UI | Entity | Live state |
 |----|--------|------------|
-| L1–L4 | `light.suite_switch_suite_l1` … `_l4` | on/off |
+| Spot TV / Pendentes / Sanca / Principal (L1–L4) | `light.suite_switch_suite_l1` … `_l4` | on/off |
 | RGB Suíte | `light.rgb_suite` | on/off, brightness, color presets |
 | Cabeceira | `light.led_cabeceira_suite` | on/off, brightness |
 | Persiana suíte | `cover.persiana_suite` | open / stop / close (RF — no position %) |
