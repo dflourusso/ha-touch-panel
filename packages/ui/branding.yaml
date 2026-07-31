@@ -10,7 +10,7 @@ image:
 
   - id: logo_info
     file: ../../../../packages/ui/assets/dfl-logo.png
-    resize: 192x192
+    resize: 220x220
     type: RGB565
     transparency: alpha_channel
 
@@ -35,12 +35,6 @@ image:
   - id: icon_info
     file: mdi:information-outline
     resize: 32x32
-    type: RGB565
-    transparency: alpha_channel
-
-  - id: icon_close
-    file: mdi:close
-    resize: 24x24
     type: RGB565
     transparency: alpha_channel
 

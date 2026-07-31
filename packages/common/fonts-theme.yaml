@@ -54,3 +54,22 @@ font:
       - file: "https://github.com/Templarian/MaterialDesign-Webfont/raw/v7.4.47/fonts/materialdesignicons-webfont.ttf"
         glyphs:
           - "\U000F0335"
+  # Latin + MDI glyphs for climate / cover action buttons
+  - file: "gfonts://Roboto"
+    id: font_climate_btn
+    size: 18
+    bpp: 4
+    glyphsets:
+      - GF_Latin_Core
+    extras:
+      - file: "https://github.com/Templarian/MaterialDesign-Webfont/raw/v7.4.47/fonts/materialdesignicons-webfont.ttf"
+        glyphs:
+          - "\U000F0425"  # power
+          - "\U000F0716"  # snowflake
+          - "\U000F0238"  # fire
+          - "\U000F0594"  # weather-night
+          - "\U000F171A"  # fan-auto
+          - "\U000F1472"  # fan-speed-3
+          - "\U000F1A0F"  # blinds-open
+          - "\U000F04DB"  # stop
+          - "\U000F0A31"  # blinds
