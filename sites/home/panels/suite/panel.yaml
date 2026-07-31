@@ -27,11 +27,14 @@ esphome:
       - light.turn_on:
           id: display_backlight
           brightness: 80%
+      - delay: 1s
+      - lvgl.widget.hide: boot_screen
 
 packages:
   hardware: !include ../../../../hardware/guition-jc8048w550.yaml
   api_wifi: !include ../../../../packages/common/api-wifi.yaml
   fonts: !include ../../../../packages/common/fonts-theme.yaml
+  branding: !include ../../../../packages/ui/branding.yaml
   ui: !include ../../../../packages/ui/room-shell.yaml
 
 globals:

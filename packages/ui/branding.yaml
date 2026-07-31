@@ -1,0 +1,45 @@
+# Shared brand images for room panels.
+# Paths are resolved relative to the panel YAML (sites/.../panels/<name>/).
+
+image:
+  - id: logo_splash
+    file: ../../../../packages/ui/assets/dfl-logo.png
+    resize: 240x240
+    type: RGB565
+    transparency: alpha_channel
+
+  - id: logo_info
+    file: ../../../../packages/ui/assets/dfl-logo.png
+    resize: 96x96
+    type: RGB565
+    transparency: alpha_channel
+
+  - id: icon_wifi_connected
+    file: mdi:wifi
+    resize: 28x28
+    type: RGB565
+    transparency: alpha_channel
+
+  - id: icon_wifi_off
+    file: mdi:wifi-off
+    resize: 28x28
+    type: RGB565
+    transparency: alpha_channel
+
+  - id: icon_wifi_connecting
+    file: mdi:wifi-sync
+    resize: 28x28
+    type: RGB565
+    transparency: alpha_channel
+
+  - id: icon_info
+    file: mdi:information-outline
+    resize: 26x26
+    type: RGB565
+    transparency: alpha_channel
+
+  - id: icon_close
+    file: mdi:close
+    resize: 24x24
+    type: RGB565
+    transparency: alpha_channel

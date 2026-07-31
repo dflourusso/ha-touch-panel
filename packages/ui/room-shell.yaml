@@ -94,46 +94,94 @@ lvgl:
             flex_flow: ROW
             flex_align_main: SPACE_BETWEEN
             flex_align_cross: CENTER
-            pad_column: 12
+            pad_column: 8
           widgets:
             - label:
                 id: header_title
                 text: ${panel_title}
                 text_font: font_roboto_22
-            - button:
-                id: btn_master_off
-                width: 148
-                height: 36
+            - obj:
+                width: SIZE_CONTENT
+                height: 100%
+                bg_opa: TRANSP
+                border_width: 0
+                pad_all: 0
+                scrollable: false
+                layout:
+                  type: FLEX
+                  flex_flow: ROW
+                  flex_align_main: END
+                  flex_align_cross: CENTER
+                  pad_column: 6
                 widgets:
-                  - label:
-                      align: CENTER
-                      text: "Desligar tudo"
-                      text_font: font_roboto_14
-                on_click:
-                  - homeassistant.action:
-                      action: light.turn_off
-                      data:
-                        entity_id: ${light_l1}
-                  - homeassistant.action:
-                      action: light.turn_off
-                      data:
-                        entity_id: ${light_l2}
-                  - homeassistant.action:
-                      action: light.turn_off
-                      data:
-                        entity_id: ${light_l3}
-                  - homeassistant.action:
-                      action: light.turn_off
-                      data:
-                        entity_id: ${light_l4}
-                  - homeassistant.action:
-                      action: light.turn_off
-                      data:
-                        entity_id: ${light_rgb}
-                  - homeassistant.action:
-                      action: light.turn_off
-                      data:
-                        entity_id: ${light_dimmer}
+                  - button:
+                      id: btn_master_off
+                      width: 132
+                      height: 36
+                      widgets:
+                        - label:
+                            align: CENTER
+                            text: "Desligar tudo"
+                            text_font: font_roboto_14
+                      on_click:
+                        - homeassistant.action:
+                            action: light.turn_off
+                            data:
+                              entity_id: ${light_l1}
+                        - homeassistant.action:
+                            action: light.turn_off
+                            data:
+                              entity_id: ${light_l2}
+                        - homeassistant.action:
+                            action: light.turn_off
+                            data:
+                              entity_id: ${light_l3}
+                        - homeassistant.action:
+                            action: light.turn_off
+                            data:
+                              entity_id: ${light_l4}
+                        - homeassistant.action:
+                            action: light.turn_off
+                            data:
+                              entity_id: ${light_rgb}
+                        - homeassistant.action:
+                            action: light.turn_off
+                            data:
+                              entity_id: ${light_dimmer}
+                  - button:
+                      id: btn_info
+                      width: 36
+                      height: 36
+                      bg_opa: TRANSP
+                      border_width: 0
+                      pad_all: 0
+                      widgets:
+                        - image:
+                            align: CENTER
+                            src: icon_info
+                            image_recolor: 0xE8EAED
+                            image_recolor_opa: COVER
+                      on_click:
+                        - lvgl.label.update:
+                            id: info_firmware_value
+                            text: !lambda |-
+                              #ifdef ESPHOME_PROJECT_VERSION
+                              return {ESPHOME_PROJECT_VERSION};
+                              #else
+                              return {"dev"};
+                              #endif
+                        - lvgl.label.update:
+                            id: info_ip_value
+                            text: !lambda |-
+                              if (id(wifi_ip).has_state() && !id(wifi_ip).state.empty())
+                                return id(wifi_ip).state;
+                              return {"—"};
+                        - lvgl.widget.show: info_screen
+                  - image:
+                      id: header_wifi_icon
+                      src: icon_wifi_connecting
+                      image_recolor: 0xE8EAED
+                      image_recolor_opa: COVER
       - obj:
           id: nav_bar
           width: 100%
@@ -207,6 +255,197 @@ lvgl:
                       id: nav_lights
                       state:
                         checked: false
+      # Info modal (above chrome, below splash)
+      - obj:
+          id: info_screen
+          hidden: true
+          x: 0
+          y: 0
+          width: 100%
+          height: 100%
+          bg_color: 0x000000
+          bg_opa: 70%
+          radius: 0
+          pad_all: 0
+          border_width: 0
+          scrollable: false
+          clickable: true
+          on_click:
+            - lvgl.widget.hide: info_screen
+          widgets:
+            - obj:
+                align: CENTER
+                width: 400
+                height: SIZE_CONTENT
+                styles: style_card
+                pad_all: 20
+                clickable: true
+                scrollable: false
+                layout:
+                  type: FLEX
+                  flex_flow: COLUMN
+                  flex_align_main: START
+                  flex_align_cross: CENTER
+                  pad_row: 12
+                widgets:
+                  - obj:
+                      width: 100%
+                      height: SIZE_CONTENT
+                      bg_opa: TRANSP
+                      border_width: 0
+                      pad_all: 0
+                      scrollable: false
+                      layout:
+                        type: FLEX
+                        flex_flow: ROW
+                        flex_align_main: END
+                        flex_align_cross: CENTER
+                      widgets:
+                        - button:
+                            id: btn_info_close
+                            width: 36
+                            height: 36
+                            bg_opa: TRANSP
+                            border_width: 0
+                            pad_all: 0
+                            widgets:
+                              - image:
+                                  align: CENTER
+                                  src: icon_close
+                                  image_recolor: 0x9AA0A6
+                                  image_recolor_opa: COVER
+                            on_click:
+                              - lvgl.widget.hide: info_screen
+                  - image:
+                      src: logo_info
+                      align: CENTER
+                  - obj:
+                      width: 100%
+                      height: SIZE_CONTENT
+                      bg_opa: TRANSP
+                      border_width: 0
+                      pad_all: 0
+                      scrollable: false
+                      layout:
+                        type: FLEX
+                        flex_flow: COLUMN
+                        flex_align_main: START
+                        flex_align_cross: START
+                        pad_row: 10
+                      widgets:
+                        - obj:
+                            width: 100%
+                            height: SIZE_CONTENT
+                            bg_opa: TRANSP
+                            border_width: 0
+                            pad_all: 0
+                            scrollable: false
+                            layout:
+                              type: FLEX
+                              flex_flow: ROW
+                              flex_align_main: SPACE_BETWEEN
+                              flex_align_cross: CENTER
+                            widgets:
+                              - label:
+                                  text: "Ambiente"
+                                  text_color: 0x9AA0A6
+                                  text_font: font_roboto_14
+                              - label:
+                                  id: info_room_value
+                                  text: ${panel_title}
+                                  text_font: font_roboto_18
+                        - obj:
+                            width: 100%
+                            height: SIZE_CONTENT
+                            bg_opa: TRANSP
+                            border_width: 0
+                            pad_all: 0
+                            scrollable: false
+                            layout:
+                              type: FLEX
+                              flex_flow: ROW
+                              flex_align_main: SPACE_BETWEEN
+                              flex_align_cross: CENTER
+                            widgets:
+                              - label:
+                                  text: "Firmware"
+                                  text_color: 0x9AA0A6
+                                  text_font: font_roboto_14
+                              - label:
+                                  id: info_firmware_value
+                                  text: "—"
+                                  text_font: font_roboto_18
+                        - obj:
+                            width: 100%
+                            height: SIZE_CONTENT
+                            bg_opa: TRANSP
+                            border_width: 0
+                            pad_all: 0
+                            scrollable: false
+                            layout:
+                              type: FLEX
+                              flex_flow: ROW
+                              flex_align_main: SPACE_BETWEEN
+                              flex_align_cross: CENTER
+                            widgets:
+                              - label:
+                                  text: "Wi-Fi"
+                                  text_color: 0x9AA0A6
+                                  text_font: font_roboto_14
+                              - label:
+                                  id: info_wifi_value
+                                  text: "Conectando…"
+                                  text_font: font_roboto_18
+                        - obj:
+                            width: 100%
+                            height: SIZE_CONTENT
+                            bg_opa: TRANSP
+                            border_width: 0
+                            pad_all: 0
+                            scrollable: false
+                            layout:
+                              type: FLEX
+                              flex_flow: ROW
+                              flex_align_main: SPACE_BETWEEN
+                              flex_align_cross: CENTER
+                            widgets:
+                              - label:
+                                  text: "IP"
+                                  text_color: 0x9AA0A6
+                                  text_font: font_roboto_14
+                              - label:
+                                  id: info_ip_value
+                                  text: "—"
+                                  text_font: font_roboto_18
+                  - button:
+                      width: 100%
+                      height: 44
+                      widgets:
+                        - label:
+                            align: CENTER
+                            text: "Fechar"
+                            text_font: font_roboto_18
+                      on_click:
+                        - lvgl.widget.hide: info_screen
+      # Boot splash (last so it covers everything)
+      - obj:
+          id: boot_screen
+          x: 0
+          y: 0
+          width: 100%
+          height: 100%
+          bg_color: 0x0F1419
+          bg_opa: COVER
+          radius: 0
+          pad_all: 0
+          border_width: 0
+          scrollable: false
+          widgets:
+            - image:
+                align: CENTER
+                src: logo_splash
+          on_press:
+            - lvgl.widget.hide: boot_screen
 
   pages:
     - id: page_lights

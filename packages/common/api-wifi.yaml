@@ -12,6 +12,29 @@ wifi:
   ap:
     ssid: "TouchPanel-Setup"
     password: "touchpanel-setup"
+  on_connect:
+    - lvgl.image.update:
+        id: header_wifi_icon
+        src: icon_wifi_connected
+    - lvgl.label.update:
+        id: info_wifi_value
+        text: "Conectado"
+    - lvgl.label.update:
+        id: info_ip_value
+        text: !lambda |-
+          if (id(wifi_ip).has_state() && !id(wifi_ip).state.empty())
+            return id(wifi_ip).state;
+          return {"—"};
+  on_disconnect:
+    - lvgl.image.update:
+        id: header_wifi_icon
+        src: icon_wifi_off
+    - lvgl.label.update:
+        id: info_wifi_value
+        text: "Desconectado"
+    - lvgl.label.update:
+        id: info_ip_value
+        text: "—"
 
 captive_portal:
 
@@ -31,6 +54,13 @@ text_sensor:
     ip_address:
       name: IP Address
       id: wifi_ip
+      on_value:
+        - lvgl.label.update:
+            id: info_ip_value
+            text: !lambda |-
+              if (x.empty())
+                return {"—"};
+              return x;
     ssid:
       name: SSID
       id: wifi_ssid_info
