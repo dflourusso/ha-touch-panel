@@ -26,8 +26,8 @@ esphome:
       - delay: 2s
       - light.turn_on:
           id: display_backlight
-          brightness: 80%
-      - delay: 1s
+          brightness: 100%
+      - delay: 2s
       - lvgl.widget.hide: boot_screen
 
 packages:
@@ -96,11 +96,15 @@ binary_sensor:
             checked: !lambda return x;
       - if:
           condition:
-            lambda: return !x;
+            lambda: return x;
           then:
-            - lvgl.label.update:
-                id: lbl_rgb_pct
-                text: "--%"
+            - lvgl.widget.show: lbl_rgb_pct
+            - lvgl.widget.show: slider_rgb_brightness
+            - lvgl.widget.show: row_rgb_colors
+          else:
+            - lvgl.widget.hide: lbl_rgb_pct
+            - lvgl.widget.hide: slider_rgb_brightness
+            - lvgl.widget.hide: row_rgb_colors
 
   - platform: homeassistant
     id: ha_dimmer_on
@@ -113,11 +117,13 @@ binary_sensor:
             checked: !lambda return x;
       - if:
           condition:
-            lambda: return !x;
+            lambda: return x;
           then:
-            - lvgl.label.update:
-                id: lbl_dimmer_pct
-                text: "--%"
+            - lvgl.widget.show: lbl_dimmer_pct
+            - lvgl.widget.show: slider_dimmer_brightness
+          else:
+            - lvgl.widget.hide: lbl_dimmer_pct
+            - lvgl.widget.hide: slider_dimmer_brightness
 
 # ---- Live state: brightness / climate numbers ----
 sensor:
