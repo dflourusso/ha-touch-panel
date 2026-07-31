@@ -50,9 +50,9 @@ binary_sensor:
     entity_id: ${light_l1}
     trigger_on_initial_state: true
     on_state:
-      - lvgl.matrix.button.update:
+      - lvgl.widget.update:
           id: btn_l1
-          control:
+          state:
             checked: !lambda return x;
 
   - platform: homeassistant
@@ -60,9 +60,9 @@ binary_sensor:
     entity_id: ${light_l2}
     trigger_on_initial_state: true
     on_state:
-      - lvgl.matrix.button.update:
+      - lvgl.widget.update:
           id: btn_l2
-          control:
+          state:
             checked: !lambda return x;
 
   - platform: homeassistant
@@ -70,9 +70,9 @@ binary_sensor:
     entity_id: ${light_l3}
     trigger_on_initial_state: true
     on_state:
-      - lvgl.matrix.button.update:
+      - lvgl.widget.update:
           id: btn_l3
-          control:
+          state:
             checked: !lambda return x;
 
   - platform: homeassistant
@@ -80,9 +80,9 @@ binary_sensor:
     entity_id: ${light_l4}
     trigger_on_initial_state: true
     on_state:
-      - lvgl.matrix.button.update:
+      - lvgl.widget.update:
           id: btn_l4
-          control:
+          state:
             checked: !lambda return x;
 
   - platform: homeassistant
