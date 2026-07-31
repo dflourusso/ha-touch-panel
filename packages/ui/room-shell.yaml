@@ -201,7 +201,8 @@ lvgl:
                 width: 200
                 height: 44
                 checkable: true
-                checked: true
+                state:
+                  checked: true
                 widgets:
                   - label:
                       align: CENTER
