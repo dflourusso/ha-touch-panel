@@ -54,16 +54,6 @@ lvgl:
       shadow_width: 0
       shadow_opa: TRANSP
       text_color: 0x9AA0A6
-      pressed:
-        bg_color: 0x3B82F6
-        bg_opa: 20%
-      checked:
-        bg_opa: TRANSP
-        text_color: 0x3B82F6
-        border_side: [TOP]
-        border_width: 3
-        border_color: 0x3B82F6
-        border_opa: COVER
 
   theme:
     button:
@@ -266,6 +256,16 @@ lvgl:
                 styles: style_tab_btn
                 state:
                   checked: true
+                pressed:
+                  bg_color: 0x3B82F6
+                  bg_opa: 20%
+                checked:
+                  bg_opa: TRANSP
+                  text_color: 0x3B82F6
+                  border_side: [TOP]
+                  border_width: 3
+                  border_color: 0x3B82F6
+                  border_opa: COVER
                 widgets:
                   - label:
                       align: CENTER
@@ -289,6 +289,16 @@ lvgl:
                 height: 56
                 checkable: true
                 styles: style_tab_btn
+                pressed:
+                  bg_color: 0x3B82F6
+                  bg_opa: 20%
+                checked:
+                  bg_opa: TRANSP
+                  text_color: 0x3B82F6
+                  border_side: [TOP]
+                  border_width: 3
+                  border_color: 0x3B82F6
+                  border_opa: COVER
                 widgets:
                   - label:
                       align: CENTER
