@@ -109,6 +109,10 @@ binary_sensor:
             - lvgl.widget.hide: lbl_rgb_pct
             - lvgl.widget.hide: slider_rgb_brightness
             - lvgl.widget.hide: row_rgb_colors
+            - lvgl.slider.update:
+                id: slider_rgb_brightness
+                indicator:
+                  bg_color: 0x3B82F6
 
   - platform: homeassistant
     id: ha_dimmer_on
@@ -207,8 +211,24 @@ sensor:
             format: "%.0f°C"
             args: ["(float) id(climate_setpoint)"]
 
-# ---- Live state: climate mode / fan ----
+# ---- Live state: climate mode / fan / RGB color ----
 text_sensor:
+  - platform: homeassistant
+    id: ha_rgb_color
+    entity_id: ${light_rgb}
+    attribute: rgb_color
+    on_value:
+      - lvgl.slider.update:
+          id: slider_rgb_brightness
+          indicator:
+            bg_color: !lambda |-
+              int r = 0, g = 0, b = 0;
+              if (sscanf(x.c_str(), "(%d, %d, %d)", &r, &g, &b) == 3 ||
+                  sscanf(x.c_str(), "[%d, %d, %d]", &r, &g, &b) == 3) {
+                return (r << 16) | (g << 8) | b;
+              }
+              return 0x3B82F6;
+
   - platform: homeassistant
     id: ha_hvac_mode
     entity_id: ${climate_entity}

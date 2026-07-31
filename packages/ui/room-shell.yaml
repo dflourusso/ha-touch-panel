@@ -579,8 +579,8 @@ lvgl:
                           pad_column: 8
                         widgets:
                           - label:
-                              text: "RGB Suíte"
-                              text_font: font_roboto_18
+                              text: "\U000F0335 Rodapé"
+                              text_font: font_lights_btn
                           - obj:
                               width: SIZE_CONTENT
                               height: SIZE_CONTENT
@@ -620,6 +620,10 @@ lvgl:
                                             - lvgl.widget.hide: lbl_rgb_pct
                                             - lvgl.widget.hide: slider_rgb_brightness
                                             - lvgl.widget.hide: row_rgb_colors
+                                            - lvgl.slider.update:
+                                                id: slider_rgb_brightness
+                                                indicator:
+                                                  bg_color: 0x3B82F6
                                             - homeassistant.action:
                                                 action: light.turn_off
                                                 data:
@@ -669,6 +673,10 @@ lvgl:
                                     text: "W"
                                     text_font: font_roboto_14
                               on_click:
+                                - lvgl.slider.update:
+                                    id: slider_rgb_brightness
+                                    indicator:
+                                      bg_color: 0xFFCC66
                                 - homeassistant.action:
                                     action: light.turn_on
                                     data:
@@ -687,6 +695,10 @@ lvgl:
                                     text_color: 0x111111
                                     text_font: font_roboto_14
                               on_click:
+                                - lvgl.slider.update:
+                                    id: slider_rgb_brightness
+                                    indicator:
+                                      bg_color: 0xEEF2FF
                                 - homeassistant.action:
                                     action: light.turn_on
                                     data:
@@ -704,6 +716,10 @@ lvgl:
                                     text: "R"
                                     text_font: font_roboto_14
                               on_click:
+                                - lvgl.slider.update:
+                                    id: slider_rgb_brightness
+                                    indicator:
+                                      bg_color: 0xE11D48
                                 - homeassistant.action:
                                     action: light.turn_on
                                     data:
@@ -721,6 +737,10 @@ lvgl:
                                     text: "G"
                                     text_font: font_roboto_14
                               on_click:
+                                - lvgl.slider.update:
+                                    id: slider_rgb_brightness
+                                    indicator:
+                                      bg_color: 0x16A34A
                                 - homeassistant.action:
                                     action: light.turn_on
                                     data:
@@ -738,6 +758,10 @@ lvgl:
                                     text: "B"
                                     text_font: font_roboto_14
                               on_click:
+                                - lvgl.slider.update:
+                                    id: slider_rgb_brightness
+                                    indicator:
+                                      bg_color: 0x2563EB
                                 - homeassistant.action:
                                     action: light.turn_on
                                     data:
@@ -770,8 +794,8 @@ lvgl:
                           pad_column: 8
                         widgets:
                           - label:
-                              text: "Cabeceira"
-                              text_font: font_roboto_18
+                              text: "\U000F0335 Cabeceira"
+                              text_font: font_lights_btn
                           - obj:
                               width: SIZE_CONTENT
                               height: SIZE_CONTENT
@@ -1000,7 +1024,7 @@ lvgl:
                                         entity_id: ${climate_entity}
                                         hvac_mode: "off"
                               - id: btn_hvac_cool
-                                text: "\U000F0716 Frio"
+                                text: "\U000F0717 Frio"
                                 control:
                                   checkable: true
                                 on_click:
@@ -1031,7 +1055,7 @@ lvgl:
                                         entity_id: ${climate_entity}
                                         fan_mode: "focus"
                               - id: btn_fan_auto
-                                text: "\U000F171A Auto"
+                                text: "\U000F171D Auto"
                                 control:
                                   checkable: true
                                 on_click:
@@ -1041,7 +1065,7 @@ lvgl:
                                         entity_id: ${climate_entity}
                                         fan_mode: "auto"
                               - id: btn_fan_high
-                                text: "\U000F1472 Alto"
+                                text: "\U000F1474 Alto"
                                 control:
                                   checkable: true
                                 on_click:

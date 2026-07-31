@@ -65,11 +65,11 @@ font:
       - file: "https://github.com/Templarian/MaterialDesign-Webfont/raw/v7.4.47/fonts/materialdesignicons-webfont.ttf"
         glyphs:
           - "\U000F0425"  # power
-          - "\U000F0716"  # snowflake
+          - "\U000F0717"  # snowflake
           - "\U000F0238"  # fire
           - "\U000F0594"  # weather-night
-          - "\U000F171A"  # fan-auto
-          - "\U000F1472"  # fan-speed-3
-          - "\U000F005D"  # arrow-up-bold
+          - "\U000F171D"  # fan-auto
+          - "\U000F1474"  # fan-speed-3
+          - "\U000F005D"  # arrow-up
           - "\U000F04DB"  # stop
-          - "\U000F0045"  # arrow-down-bold
+          - "\U000F0045"  # arrow-down
