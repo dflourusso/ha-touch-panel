@@ -181,6 +181,11 @@ sensor:
           text:
             format: "%.1f °C"
             args: [x]
+      - lvgl.label.update:
+          id: lbl_header_temp
+          text:
+            format: "%.1f°C"
+            args: [x]
 
   - platform: homeassistant
     id: ha_climate_setpoint
@@ -223,6 +228,29 @@ text_sensor:
             if (x == "heat") return "Quente";
             if (x == "off") return "Desligado";
             return x.c_str();
+      - if:
+          condition:
+            lambda: return x == "cool";
+          then:
+            - lvgl.image.update:
+                id: img_header_climate
+                src: icon_climate_cool
+                image_recolor: 0x3B82F6
+                image_recolor_opa: COVER
+            - lvgl.widget.show: img_header_climate
+          else:
+            - if:
+                condition:
+                  lambda: return x == "heat";
+                then:
+                  - lvgl.image.update:
+                      id: img_header_climate
+                      src: icon_climate_heat
+                      image_recolor: 0xF97316
+                      image_recolor_opa: COVER
+                  - lvgl.widget.show: img_header_climate
+                else:
+                  - lvgl.widget.hide: img_header_climate
 
   - platform: homeassistant
     id: ha_fan_mode

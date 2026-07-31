@@ -43,3 +43,15 @@ image:
     resize: 24x24
     type: RGB565
     transparency: alpha_channel
+
+  - id: icon_climate_cool
+    file: mdi:snowflake
+    resize: 28x28
+    type: RGB565
+    transparency: alpha_channel
+
+  - id: icon_climate_heat
+    file: mdi:fire
+    resize: 28x28
+    type: RGB565
+    transparency: alpha_channel

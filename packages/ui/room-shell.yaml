@@ -47,6 +47,23 @@ lvgl:
       border_width: 0
       pad_all: 0
       scrollbar_mode: "OFF"
+    - id: style_tab_btn
+      bg_opa: TRANSP
+      radius: 0
+      border_width: 0
+      shadow_width: 0
+      shadow_opa: TRANSP
+      text_color: 0x9AA0A6
+      pressed:
+        bg_color: 0x3B82F6
+        bg_opa: 20%
+      checked:
+        bg_opa: TRANSP
+        text_color: 0x3B82F6
+        border_side: [TOP]
+        border_width: 3
+        border_color: 0x3B82F6
+        border_opa: COVER
 
   theme:
     button:
@@ -171,11 +188,27 @@ lvgl:
                             action: light.turn_off
                             data:
                               entity_id: ${light_dimmer}
+                        - homeassistant.action:
+                            action: climate.set_hvac_mode
+                            data:
+                              entity_id: ${climate_entity}
+                              hvac_mode: "off"
                         - lvgl.widget.hide: lbl_rgb_pct
                         - lvgl.widget.hide: slider_rgb_brightness
                         - lvgl.widget.hide: row_rgb_colors
                         - lvgl.widget.hide: lbl_dimmer_pct
                         - lvgl.widget.hide: slider_dimmer_brightness
+                  - label:
+                      id: lbl_header_temp
+                      text: "--.-°C"
+                      text_font: font_roboto_18
+                      text_color: 0xE8EAED
+                  - image:
+                      id: img_header_climate
+                      hidden: true
+                      src: icon_climate_cool
+                      image_recolor: 0x3B82F6
+                      image_recolor_opa: COVER
                   - button:
                       id: btn_info
                       width: 44
@@ -227,9 +260,10 @@ lvgl:
           widgets:
             - button:
                 id: btn_tab_lights
-                width: 200
-                height: 44
+                width: 220
+                height: 56
                 checkable: true
+                styles: style_tab_btn
                 state:
                   checked: true
                 widgets:
@@ -251,13 +285,14 @@ lvgl:
                       animation: NONE
             - button:
                 id: btn_tab_climate
-                width: 200
-                height: 44
+                width: 220
+                height: 56
                 checkable: true
+                styles: style_tab_btn
                 widgets:
                   - label:
                       align: CENTER
-                      text: "Clima"
+                      text: "Clima / Persiana"
                       text_font: font_roboto_18
                 on_click:
                   - lvgl.widget.update:
@@ -389,14 +424,14 @@ lvgl:
             layout:
               type: FLEX
               flex_flow: COLUMN
-              flex_align_main: CENTER
+              flex_align_main: START
               flex_align_cross: CENTER
               pad_row: 10
             widgets:
               - buttonmatrix:
                   id: mtx_lights
                   width: 100%
-                  height: 140
+                  height: 180
                   bg_opa: TRANSP
                   border_width: 0
                   pad_all: 0
@@ -576,7 +611,7 @@ lvgl:
                                     action: light.turn_on
                                     data:
                                       entity_id: ${light_rgb}
-                                      rgb_color: "255,200,120"
+                                      color_name: "orange"
                           - button:
                               width: 56
                               height: 36
@@ -594,7 +629,7 @@ lvgl:
                                     action: light.turn_on
                                     data:
                                       entity_id: ${light_rgb}
-                                      rgb_color: "200,220,255"
+                                      color_name: "aliceblue"
                           - button:
                               width: 56
                               height: 36
@@ -611,7 +646,7 @@ lvgl:
                                     action: light.turn_on
                                     data:
                                       entity_id: ${light_rgb}
-                                      rgb_color: "255,40,40"
+                                      color_name: "red"
                           - button:
                               width: 56
                               height: 36
@@ -628,7 +663,7 @@ lvgl:
                                     action: light.turn_on
                                     data:
                                       entity_id: ${light_rgb}
-                                      rgb_color: "40,200,80"
+                                      color_name: "lime"
                           - button:
                               width: 56
                               height: 36
@@ -645,7 +680,7 @@ lvgl:
                                     action: light.turn_on
                                     data:
                                       entity_id: ${light_rgb}
-                                      rgb_color: "40,100,255"
+                                      color_name: "blue"
 
               - obj:
                   width: 100%
@@ -752,7 +787,7 @@ lvgl:
               flex_flow: COLUMN
               flex_align_main: CENTER
               flex_align_cross: CENTER
-              pad_row: 4
+              pad_row: 2
             widgets:
               - obj:
                   width: 100%
@@ -765,11 +800,11 @@ lvgl:
                     flex_flow: COLUMN
                     flex_align_main: CENTER
                     flex_align_cross: CENTER
-                    pad_row: 4
+                    pad_row: 2
                   widgets:
                     - obj:
-                        width: 220
-                        height: 220
+                        width: 190
+                        height: 190
                         bg_opa: TRANSP
                         border_width: 0
                         scrollable: false
@@ -777,8 +812,8 @@ lvgl:
                           - arc:
                               id: arc_climate_temp
                               align: CENTER
-                              width: 200
-                              height: 200
+                              width: 170
+                              height: 170
                               min_value: 16
                               max_value: 30
                               value: 24
@@ -802,7 +837,7 @@ lvgl:
                           - label:
                               id: lbl_climate_mode_word
                               align: CENTER
-                              y: -38
+                              y: -32
                               text: "--"
                               text_font: font_roboto_18
                               text_color: 0x3B82F6
@@ -814,7 +849,7 @@ lvgl:
                           - label:
                               id: lbl_climate_current
                               align: CENTER
-                              y: 38
+                              y: 32
                               text: "--.- °C"
                               text_font: font_roboto_18
                               text_color: 0x9AA0A6
@@ -829,7 +864,7 @@ lvgl:
                           type: FLEX
                           flex_flow: ROW
                           flex_align_main: CENTER
-                          pad_column: 24
+                          pad_column: 12
                         widgets:
                           - button:
                               width: 52
@@ -893,7 +928,7 @@ lvgl:
                           - button:
                               id: btn_hvac_off
                               width: 124
-                              height: 44
+                              height: 64
                               checkable: true
                               shadow_width: 0
                               widgets:
@@ -910,7 +945,7 @@ lvgl:
                           - button:
                               id: btn_hvac_cool
                               width: 124
-                              height: 44
+                              height: 64
                               checkable: true
                               shadow_width: 0
                               widgets:
@@ -927,7 +962,7 @@ lvgl:
                           - button:
                               id: btn_hvac_heat
                               width: 124
-                              height: 44
+                              height: 64
                               checkable: true
                               shadow_width: 0
                               widgets:
@@ -957,7 +992,7 @@ lvgl:
                           - button:
                               id: btn_fan_focus
                               width: 124
-                              height: 44
+                              height: 64
                               checkable: true
                               shadow_width: 0
                               widgets:
@@ -974,7 +1009,7 @@ lvgl:
                           - button:
                               id: btn_fan_auto
                               width: 124
-                              height: 44
+                              height: 64
                               checkable: true
                               shadow_width: 0
                               widgets:
@@ -991,7 +1026,7 @@ lvgl:
                           - button:
                               id: btn_fan_high
                               width: 124
-                              height: 44
+                              height: 64
                               checkable: true
                               shadow_width: 0
                               widgets:
@@ -1016,10 +1051,10 @@ lvgl:
                     flex_flow: COLUMN
                     flex_align_main: SPACE_EVENLY
                     flex_align_cross: CENTER
-                    pad_row: 8
+                    pad_row: 4
                   widgets:
                     - label:
-                        text: "Persiana suíte"
+                        text: "Persiana"
                         text_font: font_roboto_22
                     - obj:
                         width: 100%
