@@ -46,6 +46,8 @@ lvgl:
       radius: 0
       border_width: 0
       pad_all: 0
+      pad_column: 0
+      pad_row: 0
       scrollbar_mode: "OFF"
     - id: style_tab_btn
       bg_opa: TRANSP
@@ -271,6 +273,8 @@ lvgl:
             flex_flow: ROW
             flex_align_main: START
             flex_align_cross: CENTER
+            pad_column: 0
+            pad_row: 0
           widgets:
             - button:
                 id: btn_tab_lights
@@ -284,7 +288,8 @@ lvgl:
                   bg_color: 0x3B82F6
                   bg_opa: 20%
                 checked:
-                  bg_opa: TRANSP
+                  bg_color: 0x3B82F6
+                  bg_opa: 20%
                   text_color: 0x3B82F6
                   border_side: [TOP]
                   border_width: 3
@@ -317,7 +322,8 @@ lvgl:
                   bg_color: 0x3B82F6
                   bg_opa: 20%
                 checked:
-                  bg_opa: TRANSP
+                  bg_color: 0x3B82F6
+                  bg_opa: 20%
                   text_color: 0x3B82F6
                   border_side: [TOP]
                   border_width: 3
