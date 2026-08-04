@@ -228,9 +228,10 @@ lvgl:
                               if (id(wifi_ip).has_state() && !id(wifi_ip).state.empty())
                                 return id(wifi_ip).state;
                               return {"—"};
-                        - lvgl.switch.update:
+                        - lvgl.widget.update:
                             id: sw_info_sleep
-                            state: !lambda return id(sleep_mode).state;
+                            state:
+                              checked: !lambda return id(sleep_mode).state;
                         - lvgl.slider.update:
                             id: slider_display_brightness
                             value: !lambda |-

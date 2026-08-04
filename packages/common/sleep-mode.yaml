@@ -22,14 +22,16 @@ switch:
     restore_mode: RESTORE_DEFAULT_OFF
     turn_on_action:
       - logger.log: "Sleep mode enabled"
-      - lvgl.switch.update:
+      - lvgl.widget.update:
           id: sw_info_sleep
-          state: true
+          state:
+            checked: true
     turn_off_action:
       - logger.log: "Sleep mode disabled"
-      - lvgl.switch.update:
+      - lvgl.widget.update:
           id: sw_info_sleep
-          state: false
+          state:
+            checked: false
       - light.turn_on:
           id: display_backlight
           brightness: !lambda |-
