@@ -506,7 +506,10 @@ lvgl:
                       height: SIZE_CONTENT
                       bg_opa: TRANSP
                       border_width: 0
-                      pad_all: 0
+                      pad_left: 12
+                      pad_right: 12
+                      pad_bottom: 12
+                      pad_top: 0
                       scrollable: false
                       layout:
                         type: FLEX
