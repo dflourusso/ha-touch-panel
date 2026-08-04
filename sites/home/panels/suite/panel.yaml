@@ -52,6 +52,41 @@ globals:
     restore_value: false
     initial_value: "24"
 
+# Sync info brightness slider when HA (or local actions) change the backlight.
+light:
+  - id: !extend display_backlight
+    on_state:
+      - if:
+          condition:
+            light.is_on: display_backlight
+          then:
+            - lambda: |-
+                float b = id(display_backlight).current_values.get_brightness();
+                float min_b = ${display_brightness_min};
+                if (b < min_b) b = min_b;
+                if (b > 1.0f) b = 1.0f;
+                id(preferred_display_brightness) = b;
+            - lvgl.slider.update:
+                id: slider_display_brightness
+                value: !lambda |-
+                  float min_b = ${display_brightness_min};
+                  float actual = id(preferred_display_brightness);
+                  float ui = (actual - min_b) / (1.0f - min_b) * 100.0f;
+                  if (ui < 0.0f) ui = 0.0f;
+                  if (ui > 100.0f) ui = 100.0f;
+                  return ui;
+            - lvgl.label.update:
+                id: lbl_display_brightness_pct
+                text: !lambda |-
+                  float min_b = ${display_brightness_min};
+                  float actual = id(preferred_display_brightness);
+                  float ui = (actual - min_b) / (1.0f - min_b) * 100.0f;
+                  if (ui < 0.0f) ui = 0.0f;
+                  if (ui > 100.0f) ui = 100.0f;
+                  char buf[8];
+                  snprintf(buf, sizeof(buf), "%.0f%%", ui);
+                  return {buf};
+
 # ---- Live state: lights (on/off) ----
 binary_sensor:
   - platform: homeassistant

@@ -78,6 +78,9 @@ lvgl:
       bg_color: 0x3D4654
       radius: 20
       shadow_width: 0
+      # Inset track so the ~40px knob stays inside at min/max (keeps knob hit area).
+      pad_left: 20
+      pad_right: 20
       indicator:
         bg_color: 0x3B82F6
         radius: 20
