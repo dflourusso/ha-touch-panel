@@ -245,12 +245,12 @@ lvgl:
           layout:
             type: FLEX
             flex_flow: ROW
-            flex_align_main: SPACE_EVENLY
+            flex_align_main: START
             flex_align_cross: CENTER
           widgets:
             - button:
                 id: btn_tab_lights
-                width: 220
+                flex_grow: 1
                 height: 56
                 checkable: true
                 styles: style_tab_btn
@@ -285,7 +285,7 @@ lvgl:
                       animation: NONE
             - button:
                 id: btn_tab_climate
-                width: 220
+                flex_grow: 1
                 height: 56
                 checkable: true
                 styles: style_tab_btn
