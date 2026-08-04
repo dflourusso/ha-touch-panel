@@ -4,6 +4,10 @@
 #
 # Expects substitution (optional, default below):
 #   sleep_idle_timeout — e.g. "60s"
+# Expects (from hardware package):
+#   display_backlight, preferred_display_brightness, display_brightness_min
+# Expects (from UI package):
+#   sw_info_sleep — LVGL switch on the info overlay
 
 substitutions:
   sleep_idle_timeout: "60s"
@@ -18,11 +22,22 @@ switch:
     restore_mode: RESTORE_DEFAULT_OFF
     turn_on_action:
       - logger.log: "Sleep mode enabled"
+      - lvgl.switch.update:
+          id: sw_info_sleep
+          state: true
     turn_off_action:
       - logger.log: "Sleep mode disabled"
+      - lvgl.switch.update:
+          id: sw_info_sleep
+          state: false
       - light.turn_on:
           id: display_backlight
-          brightness: 100%
+          brightness: !lambda |-
+            float b = id(preferred_display_brightness);
+            float min_b = ${display_brightness_min};
+            if (b < min_b) b = min_b;
+            if (b > 1.0f) b = 1.0f;
+            return b;
       - if:
           condition: lvgl.is_paused
           then:

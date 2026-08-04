@@ -44,17 +44,20 @@ UI strings are PT-BR; entity IDs and code stay English.
 | Clima | `climate.suite_2` | temp, setpoint, HVAC `off`/`cool`/`heat`, fan `focus`/`auto`/`high` |
 | Desligar tudo | *(local action)* | turns off L1–L4, RGB, cabeceira |
 | Sleep Mode | `switch.home_suite_sleep_mode` | when ON: blank after idle + pause LVGL; touch wakes |
+| Display Backlight | `light.home_suite_display_backlight` | screen brightness (`gamma_correct: 1.0`, floor via `display_brightness_min`) |
+
+Info overlay (header **ℹ**): ambient / firmware / Wi-Fi / IP, plus **Modo sono** toggle and **Brilho** slider.
 
 Edit entity IDs in [`sites/home/panels/suite/panel.yaml`](sites/home/panels/suite/panel.yaml) substitutions, then rebuild/OTA that panel.
 
 ### Sleep mode (night / idle blank)
 
-Exposed as a config switch on the device (e.g. **Sleep Mode**). Schedule it from Home Assistant — do not hard-code times in firmware.
+Exposed as a config switch on the device (e.g. **Sleep Mode**), and also toggled from the info overlay. Schedule it from Home Assistant — do not hard-code times in firmware.
 
 | Switch | Behavior |
 |--------|----------|
-| OFF | Backlight always on |
-| ON | After `sleep_idle_timeout` (default **60s**) without touch → backlight off + `lvgl.pause`. First touch resumes LVGL and turns the backlight on **without** activating the widget under the finger. Idle blanks again while the switch stays ON. |
+| OFF | Backlight on at last preferred brightness |
+| ON | After `sleep_idle_timeout` (default **60s**) without touch → backlight off + `lvgl.pause`. First touch resumes LVGL and restores preferred brightness **without** activating the widget under the finger. Idle blanks again while the switch stays ON. |
 
 Example HA automations:
 
@@ -82,6 +85,12 @@ action:
 
 Override idle timeout per panel with substitution `sleep_idle_timeout` in `panel.yaml` (e.g. `"90s"`).
 
+### Display brightness
+
+- Backlight light uses `gamma_correct: 1.0` so HA / slider brightness % tracks real PWM duty (ESPHome’s default `2.8` crushed the lower half into near-black).
+- Preferred brightness is stored and restored on wake, sleep-off, and boot.
+- Awake brightness is clamped to a hidden floor (`display_brightness_min`, default **0.15** in [`hardware/guition-jc8048w550.yaml`](hardware/guition-jc8048w550.yaml)); the info slider UI still shows 0–100% mapped onto that floor→100% range. Raise the substitution if the dimmest end is still unreadable after flash.
+- Sleep idle blanking still turns the backlight fully off.
 ## Flash (end users)
 
 1. Open the [GitHub Pages installer](https://dflourusso.github.io/ha-touch-panel/) (after the first release + Pages publish).

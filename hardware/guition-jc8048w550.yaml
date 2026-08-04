@@ -5,6 +5,8 @@
 substitutions:
   screen_width: "480"
   screen_height: "800"
+  # Hidden floor for awake brightness (UI 0 maps here). Retune after gamma fix if needed.
+  display_brightness_min: "0.15"
 
 esphome:
   min_version: 2026.6.0
@@ -42,6 +44,12 @@ output:
     id: gpio_backlight_pwm
     frequency: 1220Hz
 
+globals:
+  - id: preferred_display_brightness
+    type: float
+    restore_value: true
+    initial_value: "1.0"
+
 light:
   - platform: monochromatic
     id: display_backlight
@@ -49,6 +57,8 @@ light:
     output: gpio_backlight_pwm
     restore_mode: ALWAYS_ON
     default_transition_length: 0s
+    # Default 2.8 crushes the HA/slider lower half into near-black PWM duty.
+    gamma_correct: 1.0
 
 i2c:
   - id: i2c_touch
@@ -71,7 +81,12 @@ touchscreen:
             - lvgl.resume:
             - light.turn_on:
                 id: display_backlight
-                brightness: 100%
+                brightness: !lambda |-
+                  float b = id(preferred_display_brightness);
+                  float min_b = ${display_brightness_min};
+                  if (b < min_b) b = min_b;
+                  if (b > 1.0f) b = 1.0f;
+                  return b;
 
 display:
   - platform: mipi_rgb

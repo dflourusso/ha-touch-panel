@@ -29,7 +29,12 @@ esphome:
       - delay: 2s
       - light.turn_on:
           id: display_backlight
-          brightness: 100%
+          brightness: !lambda |-
+            float b = id(preferred_display_brightness);
+            float min_b = ${display_brightness_min};
+            if (b < min_b) b = min_b;
+            if (b > 1.0f) b = 1.0f;
+            return b;
       - delay: 2s
       - lvgl.widget.hide: boot_screen
 
