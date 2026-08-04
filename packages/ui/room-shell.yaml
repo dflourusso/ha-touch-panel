@@ -10,8 +10,7 @@ lvgl:
     - main_display
   touchscreens:
     - main_touchscreen
-  # Partial buffer — 100% plus the MIPI RGB framebuffer can boot-loop this board.
-  buffer_size: 25%
+  buffer_size: 100%
   color_depth: 16
   # Portrait: panel timing stays 800x480; LVGL rotates presentation to 480x800.
   rotation: 90°
@@ -545,7 +544,7 @@ lvgl:
                             pad_left: 12
                             pad_right: 12
                             pad_bottom: 12
-                            pad_top: 0
+                            pad_top: 12
                             scrollable: false
                             widgets:
                               - slider:
